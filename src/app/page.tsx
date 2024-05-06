@@ -20,7 +20,7 @@ export default function Home() {
               <p className="mt-8 max-w-prose text-balance text-center text-lg md:text-wrap lg:pr-10 lg:text-left">
                 Capture your favorite memories with your own,{" "}
                 <span className="font-semibold">one-of-one</span> phone case.
-                CaseCobra allows you to protect your memories, not just your
+                Casecobra allows you to protect your memories, not just your
                 phone case.
               </p>
               <ul className="mt-8 flex flex-col items-center space-y-2 text-left font-medium sm:items-start">
@@ -93,7 +93,7 @@ export default function Home() {
                 className="absolute -bottom-6 -left-6 w-20 select-none"
                 alt=""
               />
-              <Phone />
+              <Phone className="w-64" imgSrc="/testimonials/1.jpg" />
             </div>
           </div>
         </MaxWidthWrapper>
