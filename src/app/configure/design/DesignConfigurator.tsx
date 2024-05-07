@@ -7,7 +7,7 @@ import { cn, formatPrice } from "@/lib/utils";
 import NextImage from "next/image";
 import { Rnd } from "react-rnd";
 import { RadioGroup } from "@headlessui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   COLORS,
   FINISHES,
@@ -50,12 +50,79 @@ const DesignConfigurator = ({
     material: MATERIALS.options[0],
     finish: FINISHES.options[0],
   });
+  const [renderedDimension, setRenderedDimension] = useState({
+    width: imageDimensions.width / 4,
+    height: imageDimensions.height / 4,
+  });
+  const [renderedPosition, setRenderedPosition] = useState({
+    x: 150,
+    y: 205,
+  });
+
+  const phoneCaseRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const saveConfiguration = async () => {
+    try {
+      const {
+        left: caseLeft,
+        top: caseTop,
+        width,
+        height,
+      } = phoneCaseRef.current!.getBoundingClientRect();
+      const { left: containerLeft, top: containerTop } =
+        containerRef.current!.getBoundingClientRect();
+
+      const leftOffset = caseLeft - containerLeft;
+      const topOffset = caseTop - containerTop;
+
+      const actualX = renderedPosition.x - leftOffset;
+      const actualY = renderedPosition.y - topOffset;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+
+      const userImage = new Image();
+      userImage.crossOrigin = "anonymous";
+      userImage.src = imageUrl;
+      await new Promise((resolve) => (userImage.onload = resolve));
+
+      ctx?.drawImage(
+        userImage,
+        actualX,
+        actualY,
+        renderedDimension.width,
+        renderedDimension.height,
+      );
+
+      const base64 = canvas.toDataURL();
+      const base64Data = base64.split(",")[1];
+
+      const blob = base64ToBlob(base64Data, "image/png");
+    } catch (error) {}
+  };
+
+  const base64ToBlob = (base64: string, mimeType: string) => {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeType });
+  };
 
   return (
     <div className="relative mb-20 mt-20 grid grid-cols-1 pb-20 lg:grid-cols-3">
-      <div className="relative col-span-2 flex h-[37.5rem] w-full max-w-4xl items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+      <div
+        ref={containerRef}
+        className="relative col-span-2 flex h-[37.5rem] w-full max-w-4xl items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-gray-300 p-12 text-center focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      >
         <div className="pointer-events-none relative aspect-[896/1831] w-60 bg-opacity-50">
           <AspectRatio
+            ref={phoneCaseRef}
             ratio={896 / 1831}
             className="pointer-events-none relative z-50 aspect-[896/1831] w-full"
           >
@@ -80,6 +147,16 @@ const DesignConfigurator = ({
             y: 205,
             height: imageDimensions.height / 4,
             width: imageDimensions.width / 4,
+          }}
+          onDragStop={(_, { x, y }) => {
+            setRenderedPosition({ x, y });
+          }}
+          onResizeStop={(_, __, ref, ___, { x, y }) => {
+            setRenderedDimension({
+              width: parseInt(ref.style.width.slice(0, -2)),
+              height: parseInt(ref.style.height.slice(0, -2)),
+            });
+            setRenderedPosition({ x, y });
           }}
           lockAspectRatio
           className="absolute z-20 border-[3px] border-primary"
@@ -267,7 +344,7 @@ const DesignConfigurator = ({
                     100,
                 )}
               </p>
-              <Button size="sm" className="w-full">
+              <Button onClick={saveConfiguration} size="sm" className="w-full">
                 Continue <ArrowRight className="ml-1.5 inline h-4 w-4" />
               </Button>
             </div>
