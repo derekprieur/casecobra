@@ -8,7 +8,12 @@ import NextImage from "next/image";
 import { Rnd } from "react-rnd";
 import { RadioGroup } from "@headlessui/react";
 import { useState } from "react";
-import { COLORS, MODELS } from "@/validators/option-validator";
+import {
+  COLORS,
+  FINISHES,
+  MATERIALS,
+  MODELS,
+} from "@/validators/option-validator";
 import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
@@ -17,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 interface DesignConfiguratorProps {
   configId: string;
@@ -36,9 +41,13 @@ const DesignConfigurator = ({
   const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
     model: (typeof MODELS.options)[number];
+    material: (typeof MATERIALS.options)[number];
+    finish: (typeof FINISHES.options)[number];
   }>({
     color: COLORS[0],
     model: MODELS.options[0],
+    material: MATERIALS.options[0],
+    finish: FINISHES.options[0],
   });
 
   return (
@@ -159,13 +168,34 @@ const DesignConfigurator = ({
                             model.label === options.model.label &&
                               "bg-zinc-100",
                           )}
+                          onClick={() => {
+                            setOptions((prevOptions) => ({
+                              ...prevOptions,
+                              model,
+                            }));
+                          }}
                         >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              model.label === options.model.label
+                                ? "opacity-100"
+                                : "opacity-0",
+                            )}
+                          />
                           {model.label}
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
+                {[MATERIALS, FINISHES].map(
+                  ({ name, options: selectableOptions }) => {
+                    return (
+                      <RadioGroup key={name} value={options[name]}></RadioGroup>
+                    );
+                  },
+                )}
               </div>
             </div>
           </div>
