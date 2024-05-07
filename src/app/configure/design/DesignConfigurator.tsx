@@ -3,7 +3,7 @@
 import HandleComponent from "@/components/HandleComponent";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import NextImage from "next/image";
 import { Rnd } from "react-rnd";
 import { RadioGroup } from "@headlessui/react";
@@ -22,7 +22,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
+import { BASE_PRICE } from "@/config/products";
 
 interface DesignConfiguratorProps {
   configId: string;
@@ -192,7 +193,63 @@ const DesignConfigurator = ({
                 {[MATERIALS, FINISHES].map(
                   ({ name, options: selectableOptions }) => {
                     return (
-                      <RadioGroup key={name} value={options[name]}></RadioGroup>
+                      <RadioGroup
+                        key={name}
+                        value={options[name]}
+                        onChange={(value) => {
+                          setOptions((prevOptions) => ({
+                            ...prevOptions,
+                            [name]: value,
+                          }));
+                        }}
+                      >
+                        <Label>
+                          {name.slice(0, 1).toUpperCase() + name.slice(1)}
+                        </Label>
+                        <div className="mt-3 space-y-4">
+                          {selectableOptions.map((option) => (
+                            <RadioGroup.Option
+                              key={option.value}
+                              value={option}
+                              className={({ active, checked }) =>
+                                cn(
+                                  "relative block cursor-pointer rounded-lg border-2 border-zinc-200 bg-white px-6 py-4 shadow-sm outline-none ring-0 focus:outline-none focus:ring-0 sm:flex sm:justify-between",
+                                  { "border-primary": active || checked },
+                                )
+                              }
+                            >
+                              <span className="flex items-center">
+                                <span className="flex flex-col text-sm">
+                                  <RadioGroup.Label
+                                    as="span"
+                                    className="font-medium text-gray-900"
+                                  >
+                                    {option.label}
+                                  </RadioGroup.Label>
+                                  {option.description && (
+                                    <RadioGroup.Description
+                                      as="span"
+                                      className="text-gray-500"
+                                    >
+                                      <span className="block sm:inline">
+                                        {option.description}
+                                      </span>
+                                    </RadioGroup.Description>
+                                  )}
+                                </span>
+                              </span>
+                              <RadioGroup.Description
+                                as="span"
+                                className="mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right"
+                              >
+                                <span className="font-medium text-gray-900">
+                                  {formatPrice(option.price / 100)}
+                                </span>
+                              </RadioGroup.Description>
+                            </RadioGroup.Option>
+                          ))}
+                        </div>
+                      </RadioGroup>
                     );
                   },
                 )}
@@ -200,6 +257,22 @@ const DesignConfigurator = ({
             </div>
           </div>
         </ScrollArea>
+        <div className="h-16 w-full bg-white px-8">
+          <div className="h-px w-full bg-zinc-200" />
+          <div className="flex h-full w-full items-center justify-end">
+            <div className="flex w-full items-center gap-6">
+              <p className="whitespace-nowrap font-medium">
+                {formatPrice(
+                  (BASE_PRICE + options.finish.price + options.material.price) /
+                    100,
+                )}
+              </p>
+              <Button size="sm" className="w-full">
+                Continue <ArrowRight className="ml-1.5 inline h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
