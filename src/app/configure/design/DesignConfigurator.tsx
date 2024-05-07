@@ -1,6 +1,7 @@
 "use client";
 
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { cn } from "@/lib/utils";
 import NextImage from "next/image";
 
 interface DesignConfiguratorProps {
@@ -29,8 +30,24 @@ const DesignConfigurator = ({
               alt="phone image"
               src="/phone-template.png"
               className="pointer-events-none z-50 select-none"
+              fill
             />
           </AspectRatio>
+          <div className="absolute inset-0 bottom-px left-[3px] right-[3px] top-px z-40 rounded-[32px] shadow-[0_0_0_99999px_rgba(229,231,235,0.6)]" />
+          <div
+            className={cn(
+              "absolute inset-0 bottom-px left-[3px] right-[3px] top-px rounded-[32px]",
+              `bg-zinc-950`,
+            )}
+          />
+        </div>
+        <div className="relative h-full w-full">
+          <NextImage
+            src={imageUrl}
+            fill
+            alt="your image"
+            className="pointer-events-none"
+          />
         </div>
       </div>
     </div>
