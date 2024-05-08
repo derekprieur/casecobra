@@ -11,6 +11,7 @@ import {
   MODELS,
 } from "@/validators/option-validator";
 import { Configuration } from "@prisma/client";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
@@ -27,6 +28,11 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   let totalPrice = BASE_PRICE;
   if (material === "polycarbonate") totalPrice += MATERIALS.options[1].price;
   if (finish === "textured") totalPrice += FINISHES.options[1].price;
+
+  const {} = useMutation({
+    mutationKey: ["get-checkout-session"],
+    mutationFn: async () => {},
+  });
 
   useEffect(() => {
     setShowConfetti(true);
