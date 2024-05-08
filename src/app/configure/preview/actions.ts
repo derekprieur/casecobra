@@ -34,7 +34,7 @@ export const createCheckoutSession = async ({ configId }: {
             configurationId: configuration.id
         }
     })
-
+    console.log(user.id, configuration.id)
     if (existingOrder) {
 
         order = existingOrder
