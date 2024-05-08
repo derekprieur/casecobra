@@ -23,4 +23,6 @@ export const createCheckoutSession = async ({ configId }: {
     let price = BASE_PRICE
     if (finish === 'textured') price += PRODUCT_PRICES.finish.textured
     if (material === 'polycarbonate') price += PRODUCT_PRICES.material.polycarbonate
+
+
 }
