@@ -24,6 +24,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import { BASE_PRICE } from "@/config/products";
+import { useUploadThing } from "@/lib/uploadthing";
+import { useToast } from "@/components/ui/use-toast";
 
 interface DesignConfiguratorProps {
   configId: string;
@@ -39,6 +41,7 @@ const DesignConfigurator = ({
   imageUrl,
   imageDimensions,
 }: DesignConfiguratorProps) => {
+  const { toast } = useToast();
   const [options, setOptions] = useState<{
     color: (typeof COLORS)[number];
     model: (typeof MODELS.options)[number];
@@ -61,6 +64,8 @@ const DesignConfigurator = ({
 
   const phoneCaseRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const { startUpload } = useUploadThing("imageUploader");
 
   const saveConfiguration = async () => {
     try {
@@ -101,7 +106,20 @@ const DesignConfigurator = ({
       const base64Data = base64.split(",")[1];
 
       const blob = base64ToBlob(base64Data, "image/png");
-    } catch (error) {}
+      const file = new File([blob], "filename.png", {
+        type: "image/png",
+      });
+
+      await startUpload([file], {
+        configId,
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: "There was a problem saving your config, please try again",
+        variant: "destructive",
+      });
+    }
   };
 
   const base64ToBlob = (base64: string, mimeType: string) => {
