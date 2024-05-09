@@ -86,6 +86,7 @@ export async function POST(req: Request) {
                         },
                     }),
                 })
+                console.log('Email sent')
             } catch (error) {
                 console.error('Error sending email', error)
             }
