@@ -2,11 +2,17 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getPaymentStatus } from "./actions";
+import { useSearchParams } from "next/navigation";
 
 const ThankYou = () => {
-  const {} = useQuery({
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId") || "";
+
+  const { data } = useQuery({
     queryKey: ["get-payment-status"],
-    queryFn: async () => await getPaymentStatus(),
+    queryFn: async () => await getPaymentStatus({ orderId }),
+    retry: true,
+    retryDelay: 500,
   });
 
   return <div>ThankYou</div>;
