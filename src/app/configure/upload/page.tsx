@@ -17,8 +17,11 @@ const UploadPage = () => {
   const [isPending, startTransition] = useTransition();
   const { startUpload, isUploading } = useUploadThing("imageUploader", {
     onClientUploadComplete: ([data]) => {
+      console.log(data, "data");
       const configId = data.serverData.configId;
+      console.log(configId, "configId");
       startTransition(() => {
+        console.log("startTransition");
         router.push(`/configure/design?id=${configId}`);
       });
     },
