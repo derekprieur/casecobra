@@ -127,13 +127,13 @@ export default function Home() {
               </div>
               <div className="text-lg leading-8">
                 <p>
-                  &quot;The case feels durable and I even got a compliment on
-                  the design. Had the case for two and a half months now and{" "}
+                  "The case feels durable and I even got a compliment on the
+                  design. Had the case for two and a half months now and{" "}
                   <span className="bg-slate-800 p-0.5 text-white">
                     the image is super clear
                   </span>
                   , on the case I had before, the image started fading into
-                  yellow-ish color after a couple weeks. Love it.&quot;
+                  yellow-ish color after a couple weeks. Love it."
                 </p>
               </div>
               <div className="mt-2 flex gap-4">
