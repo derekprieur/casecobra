@@ -16,7 +16,7 @@ export const formatPrice = (price: number) => {
 }
 
 export function constructMetadata({
-  title = "Casecobra - custom high-quality phone cases",
+  title = "CaseCobra - custom high-quality phone cases",
   description = 'Create custom high-quality phone cases in seconds',
   image = '/thumbnail.png',
   icons = '/favicon.ico',
@@ -32,7 +32,7 @@ export function constructMetadata({
     openGraph: {
       title,
       description,
-      images: [{url: image}]
+      images: [{ url: image }]
     },
     twitter: {
       card: "summary_large_image",
