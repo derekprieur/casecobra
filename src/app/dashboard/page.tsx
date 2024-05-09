@@ -137,7 +137,7 @@ const DashboardPage = async () => {
                     </div>
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
-                    <StatusDropdown />
+                    <StatusDropdown id={order.id} orderStatus={order.status} />
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
                     {order.createdAt.toLocaleDateString()}
